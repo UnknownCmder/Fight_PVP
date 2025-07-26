@@ -2,14 +2,11 @@ import pygame
 from map import createMap
 import sys
 
-# 초기화
-pygame.init()
+pygame.init() # 초기화
 
-# 색상
-WHITE = (255, 255, 255)
 createMap()  # 맵 및 오브젝트 생성
 
-from map.setting import screen, TICK_PER_SECOND, player1, player2, players, objects
+from map.setting import screen, TICK_PER_SECOND, player1, player2, players, objects, background_image
 
 # 게임 루프
 running = True
@@ -25,8 +22,7 @@ while running:
     players.update()  # 플레이어 업데이트
     objects.update()  # 오브젝트 업데이트
 
-    screen.fill(WHITE) # 배경화면 그리기
-    #EntityList.players.update() # 플레이어 업데이트
+    screen.fill(background_image) # 배경화면 그리기 (나중에는 이미지 삽입으로 변경)
     objects.draw(screen) # 플레이어 그리기
     pygame.display.flip() # 화면 업데이트
 
