@@ -24,7 +24,6 @@ class Gun(pg.sprite.Sprite):
         self.angle %= 360
 
         old_center = self.rect.center  # 회전 전 중심 저장
-        #self.image = pg.transform.rotate(self.image, self.angle)
         self.image = self.turnedImage[self.angle]
         self.rect = self.image.get_rect(center=old_center)
 

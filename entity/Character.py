@@ -6,12 +6,17 @@ class Character(Entity):
     def __init__(self, type:int, image, position: pg.Vector2, size: int, move_keys: list):
         super().__init__(image, position, size)
         self.type = type # 캐릭터 타입 (1: 플레이어1, 2: 플레이어2)
-        self.move_keys = move_keys # [left, right, jump]
-        self.health = 1 # 체력
+        self.move_keys = move_keys # [left, right, jump, shoot]
+        self.health = 4 # 체력
         self.gun = None
         self.didAttack = False  # 공격 여부
+        self.gun_turn_angle = 0 # 총 회전 각도
 
     def getGun(self, image, size: int, bullet_speed: int):
+        if self.type == 1:
+            self.gun_turn_angle = 5
+        elif self.type == 2:
+            self.gun_turn_angle = -5
         self.gun = Gun(image, pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2), size, bullet_speed) # 총 생성
 
     def setLocation(self, position: pg.Vector2): # 위치 설정
@@ -32,6 +37,7 @@ class Character(Entity):
         if keys[self.move_keys[3]]: # 공격
             if self.gun and not self.didAttack:
                 self.gun.shoot(self)
+                self.gun_turn_angle *= -1
                 self.didAttack = True
         else:
             self.didAttack = False
@@ -85,4 +91,4 @@ class Character(Entity):
 
         # 총 위치 업데이트
         self.gun.setLocation(pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2))
-        self.gun.turn(5)  # 총 회전
+        self.gun.turn(self.gun_turn_angle)  # 총 회전

@@ -3,8 +3,6 @@ from map import createMap
 from GameOver import gameOver
 
 def startGame():
-    #pygame.init() # 초기화
-
     createMap()  # 맵 및 오브젝트 생성
 
     from map.setting import players, grounds, bullets, background_image, guns
@@ -25,19 +23,17 @@ def startGame():
         players.update()  # 플레이어 업데이트
         guns.update()  # 총 업데이트
         bullets.update()  # 총알 업데이트
-        #print("1총알 개수:", len(bullets))  # 총알 개수 출력 (디버깅용)
         
         for bullet in bullets:
             if not bullet.isExist:
                 bullets.remove(bullet)
-        #print("2총알 개수:", len(bullets))  # 총알 개수 출력 (디버깅용)
+
         screen.blit(background_image, (0, 0)) # 배경화면 그리기 (나중에는 이미지 삽입으로 변경)
         grounds.draw(screen) # 플레이어 그리기
         players.draw(screen)  # 플레이어 그리기
         guns.draw(screen)  # 총 그리기
         bullets.draw(screen)  # 총알 그리기
 
-        #print("3총알 개수:", len(bullets))  # 총알 개수 출력 (디버깅용)
         for p in players:
             if p.health <= 0:
                 print("플레이어 사망")
@@ -47,7 +43,7 @@ def startGame():
                 return overOrder
 
         player_list  = players.sprites()
-        # 폰트 설정 (None은 기본 폰트 사용, 40은 글자 크기)c
+        # 폰트 설정 (None은 기본 폰트 사용, 40은 글자 크기)
         font = pygame.font.Font(None, 40)
         # 텍스트 Surface 생성 (텍스트, 안티앨리어싱, 색상)
         text_surface_hp1 = font.render("HP " + str(player_list[0].health), True, (255, 64, 64))

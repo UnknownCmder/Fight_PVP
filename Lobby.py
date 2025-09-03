@@ -5,9 +5,6 @@ from map import createMap
 
 def start_lobby():
     from map.init_setting import screen_width, screen_height, screen
-    # 화면 설정
-    # screen = py.display.set_mode((screen_width, screen_height))
-    # py.display.set_caption("Game Lobby")
 
     # 색상 정의
     WHITE = (255, 255, 255)
@@ -34,13 +31,8 @@ def start_lobby():
     while running:
         image = py.image.load("./assets/lobby_background.png").convert() # 배경 이미지 불러오기
         screen.blit(image, (-190, 0)) # 배경화면 그리기
-        # # 제목 그리기
-        # title_surface = title_font.render("Fight PvP", True, WHITE)
-        # title_rect = title_surface.get_rect(center=(screen_width//2, screen_height//4))
-        # screen.blit(title_surface, title_rect)
 
         # 메뉴 그리기
-                # 메뉴 그리기
         start_y = screen_height//2
         gap = 50
         for i, item in enumerate(menu_items):
@@ -83,7 +75,9 @@ def start_lobby():
                 elif event.key == py.K_SPACE:
                     if menu_items[selected_index]["text"] == "play":
                         play()
-                    print(menu_items[selected_index]["text"])
+                    elif menu_items[selected_index]["text"] == "exit":
+                        running = False
+                    #print(menu_items[selected_index]["text"])
             elif event.type == py.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos
                 for item in menu_items:
@@ -102,8 +96,7 @@ def play():
         result = startGame()  # 게임 시작
         if result == "lobby":
             print("로비로 돌아가기")
-            #createMap()  # 로비로 돌아가서 맵 및 오브젝트 재생성
-            game_running = False  # 로비 기능이 없으므로 종료
+            game_running = False  # 종료
         elif result == "replay":
             print("게임 다시 시작")
             continue  # 게임 다시 시작

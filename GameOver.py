@@ -8,7 +8,7 @@ RED = (200, 0, 0)
 BLACK = (0, 0, 0)
 
 def draw_text_with_border(surface, text, font, text_color, border_color, center_pos, border_thickness=2):
-    """테두리 있는 텍스트 그리기"""
+    # 테두리 있는 텍스트 그리기
     text_surface = font.render(text, True, text_color)
     border_surface = font.render(text, True, border_color)
     rect = text_surface.get_rect(center=center_pos)
