@@ -4,7 +4,7 @@ class Entity(pg.sprite.Sprite):
     def __init__(self, image, position: pg.Vector2, size: int):
         super().__init__()
         self.image = image # 이미지 설정
-        self.image = pg.transform.scale(self.image, size) # 이미지 크기 조정
+        self.image = pg.transform.scale(self.image, (size, size)) # 이미지 크기 조정
         self.position = position # 위치 설정
 
         self.rect = self.image.get_rect() # 히트박스(직사각형)
@@ -16,6 +16,8 @@ class Entity(pg.sprite.Sprite):
         self.jump_first_power = (7) # 점프 초기 힘
         self.jump_power = 0 # 점프 힘
         self.dropping = False # 낙하 중인지 여부
+
+        self.isExist = True # 오브젝트 존재 여부
         
     def move(self, move: pg.Vector2):
         steps = [pg.Vector2(0, 0)]  # 시작 위치(0,0)를 steps 리스트에 추가
@@ -51,20 +53,10 @@ class Entity(pg.sprite.Sprite):
 
 
     def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
-        # 충돌 여부를 확인하기 위해 임시로 rect를 복사
-        temp_rect = self.rect.copy()
-        temp_rect.x += int(move.x)
-        temp_rect.y += int(move.y)
-
-        from map.setting import screen_width, screen_height, objects
-        if temp_rect.left < 0 or temp_rect.right > screen_width or temp_rect.top < 0 or temp_rect.bottom > screen_height: # 화면 밖으로 나가는지 확인
-            return True
-        
-        for obj in objects: #충돌 체크
-            if obj != self and temp_rect.colliderect(obj.rect):
-                return True
-            
-        return False
+        pass
+    
+    def kill(self): # 오브젝트 제거
+        self.isExist = False
 
     def gravity(self): # 중력 적용
         self.gravity_speed += self.gravity_acceleration # 중력 가속도 적용
