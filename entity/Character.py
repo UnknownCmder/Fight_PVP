@@ -14,9 +14,9 @@ class Character(Entity):
 
     def getGun(self, image, size: int, bullet_speed: int):
         if self.type == 1:
-            self.gun_turn_angle = 5
+            self.gun_turn_angle = 2
         elif self.type == 2:
-            self.gun_turn_angle = -5
+            self.gun_turn_angle = -2
         self.gun = Gun(image, pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2), size, bullet_speed) # 총 생성
 
     def setLocation(self, position: pg.Vector2): # 위치 설정
@@ -51,7 +51,7 @@ class Character(Entity):
         temp_rect.y += int(move.y)
 
         from map.init_setting import screen_width, screen_height, screen
-        from map.setting import players, grounds, bullets
+        from map.CreateMap import players, grounds, bullets
         #if temp_rect.left < 0 or temp_rect.right > screen_width or temp_rect.top < 0 or temp_rect.bottom > screen_height: # 화면 밖으로 나가는지 확인
         #    return True
         old_rect = temp_rect.copy()

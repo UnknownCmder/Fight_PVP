@@ -35,7 +35,7 @@ class Gun(pg.sprite.Sprite):
         image = pg.image.load("./assets/bullet.png").convert_alpha()
         image = pg.transform.rotate(image, -self.angle)
         # 총알 생성
-        from map.setting import bullets
+        from map.CreateMap import bullets
         bullets.add(Bullet(image, self.position, 20, pg.Vector2(0, self.bullet_speed).rotate(self.angle), shooter)) # 총알 생성
 
 

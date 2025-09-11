@@ -16,6 +16,7 @@ background_image = None
 
 def createMap():
     from .init_setting import tile_size, screen, screen_width, screen_height
+    from Select_map import selected_map
     global player1, player2, players, guns, grounds, bullets, WHITE, background_image
 
     screen.fill(WHITE) # 배경화면 그리기 (나중에는 이미지 삽입으로 변경)
@@ -28,9 +29,13 @@ def createMap():
     players = pg.sprite.Group() # 플레이어 그룹
     grounds = pg.sprite.Group() # 바닥 그룹
 
+    file_list = None
     folder_path = os.path.join(os.path.dirname(__file__)+"/map_list")
-    file_list = os.listdir(folder_path) # 폴더 내 모든 파일 목록 가져오기
-    file_list = [f for f in file_list if os.path.isfile(os.path.join(folder_path, f))] # 숨김 파일, 폴더 등 제외하고 파일만 필터링
+    if selected_map == "RANDOM":
+        file_list = os.listdir(folder_path) # 폴더 내 모든 파일 목록 가져오기
+        file_list = [f for f in file_list if os.path.isfile(os.path.join(folder_path, f))] # 숨김 파일, 폴더 등 제외하고 파일만 필터링
+    else:
+        file_list = [os.path.join(folder_path, selected_map)] # 선택된 맵 파일만 리스트에 추가
 
     # 파일이 있을 때만 랜덤 선택
     if file_list:
@@ -74,11 +79,11 @@ def createMap():
         # 플레이어 총 생성
         image = pg.image.load("./assets/right_gun.png").convert_alpha()
         image = pg.transform.rotate(image, -90)
-        player1.getGun(image, 50, 20)  # 플레이어 총 생성 (임시 이미지 사용)
+        player1.getGun(image, 80, 20)  # 플레이어 총 생성 (임시 이미지 사용)
         
         image = pg.image.load("./assets/left_gun.png").convert_alpha()
         image = pg.transform.rotate(image, 90)
-        player2.getGun(image, 50, 20)  # 플레이어 총 생성 (임시 이미지 사용)
+        player2.getGun(image, 80, 20)  # 플레이어 총 생성 (임시 이미지 사용)
         players.add(player1, player2)
 
         guns = pg.sprite.Group()  # 총 그룹 생성

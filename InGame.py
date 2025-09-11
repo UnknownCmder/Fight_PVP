@@ -5,7 +5,7 @@ from GameOver import gameOver
 def startGame():
     createMap()  # 맵 및 오브젝트 생성
 
-    from map.setting import players, grounds, bullets, background_image, guns
+    from map.CreateMap import players, grounds, bullets, background_image, guns
     from map.init_setting import TICK_PER_SECOND, screen
 
     # 게임 루프
