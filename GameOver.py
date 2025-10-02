@@ -46,14 +46,14 @@ def gameOver(loser: int, pre_screen):  # 게임 오버 화면
         overlay.fill((0, 0, 0))
         screen.blit(overlay, (0, 0))
 
-        winner = 0
+        winner = ""
         if loser == 1:
-            winner = 2
+            winner = "BLUE"
         else:
-            winner = 1
+            winner = "RED"
         # 승자 표시
         rect_gameover = draw_text_with_border(
-            screen, f"player{winner} win!", font_big, WHITE, BLACK,
+            screen, f"{winner} win!", font_big, WHITE, BLACK,
             (screen_width // 2, screen_height // 2 - 100), border_thickness=3
         )
 

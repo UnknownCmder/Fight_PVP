@@ -1,4 +1,4 @@
-from .setting import createMap
+from .CreateMap import createMap
 from .init_setting import screen_width, screen_height, tile_size, screen
 '''
 map_init.csv는 맵 생성에 필요한 초기 설정 파일 (수정 금지)

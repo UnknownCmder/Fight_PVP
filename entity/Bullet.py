@@ -18,7 +18,7 @@ class Bullet(Entity):
         temp_rect.y += int(move.y)
 
         from map.init_setting import screen_width, screen_height
-        from map.setting import players, grounds, bullets
+        from map.CreateMap import players, grounds, bullets
         if temp_rect.left < 0 or temp_rect.right > screen_width or temp_rect.top < 0 or temp_rect.bottom > screen_height: # 화면 밖으로 나가는지 확인
             self.kill()
             return True
