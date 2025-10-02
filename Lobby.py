@@ -2,7 +2,6 @@ import pygame as py
 import sys
 from InGame import startGame
 from map import createMap
-from Setting import setting
 
 def start_lobby():
     from map.init_setting import screen_width, screen_height, screen
@@ -27,10 +26,9 @@ def start_lobby():
 
     selected_index = 0  # 현재 선택된 메뉴
 
-    # 메인 루프
+    # 메인 루프 
     running = True
     while running:
-        #image = py.image.load("./assets/lobby_background.png").convert() # 배경 이미지 불러오기
         image = py.image.load("./assets/lobby_background.png").convert() # 배경 이미지 불러오기
         screen.blit(image, (0, 0)) # 배경화면 그리기
 
@@ -60,7 +58,7 @@ def start_lobby():
                     (text_rect.left - 30, text_rect.centery + 10),
                     (text_rect.left - 10, text_rect.centery)
                 ]
-                py.draw.polygon(screen, BLACK, triangle_points)
+                py.draw.polygon(screen, WHITE, triangle_points)
 
 
         py.display.flip()
@@ -78,6 +76,7 @@ def start_lobby():
                     if menu_items[selected_index]["text"] == "play":
                         play()
                     elif menu_items[selected_index]["text"] == "setting":
+                        from Setting import setting
                         setting()
                     elif menu_items[selected_index]["text"] == "exit":
                         running = False
@@ -89,6 +88,7 @@ def start_lobby():
                         if item["text"] == "play":
                             play()
                         if item["text"] == "setting":
+                            from Setting import setting
                             setting()
                         #print(f"{item['text']} clicked!")  # 클릭된 메뉴 출력
                         if item["text"] == "exit":

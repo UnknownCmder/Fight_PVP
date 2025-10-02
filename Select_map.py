@@ -32,7 +32,7 @@ def select_map():
 
     # map_list 폴더의 csv 파일 불러오기
     folder_path = "map/map_list"
-    file_list = [f for f in os.listdir(folder_path) if f.endswith(".csv")]
+    file_list = [f for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
     file_list.sort()
     file_list.insert(0, "Random")  # 랜덤 맨 위 추가
 
@@ -40,7 +40,7 @@ def select_map():
     running = True
     while running:
         screen.fill((0, 0, 0)) # 배경화면 그리기
-
+        
         # 표시할 맵 이름
         prev_map = file_list[current_index - 1] if current_index > 0 else ""
         next_map = file_list[current_index + 1] if current_index < len(file_list) - 1 else ""
