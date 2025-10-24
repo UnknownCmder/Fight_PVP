@@ -1,75 +1,111 @@
 import pygame as pg
+from entity import Entity
+from item.Pistol import Pistol
 
-class Entity(pg.sprite.Sprite):
-    def __init__(self, image, position: pg.Vector2, size: int):
-        super().__init__()
-        self.image = image # 이미지 설정
-        self.image = pg.transform.scale(self.image, (size, size)) # 이미지 크기 조정
-        self.position = position # 위치 설정
-
-        self.rect = self.image.get_rect() # 히트박스(직사각형)
-        self.rect.topleft = (self.position.x, self.position.y) # 직사각형 위치 설정
-
-        self.speed = 10 # 이동 속도
-        self.gravity_speed = 0 # 중력 속도
-        self.gravity_acceleration = (0.05) # 중력 가속도
-        self.jump_first_power = (7) # 점프 초기 힘
+class Character(Entity):
+    def __init__(self, type:int, image, position: pg.Vector2, size: int, move_keys: list):
+        super().__init__(image, position, size)
+        self.type = type # 캐릭터 타입 (1: 플레이어1, 2: 플레이어2)
+        self.move_keys = move_keys # [left, right, jump, shoot]
+        self.health = 20 # 체력
+        self.gun = None
+        self.didAttack = False  # 공격 여부
+        self.gun_turn_angle = 0 # 총 회전 각도
+        self.jump_first_power = (20) # 점프 초기 힘
         self.jump_power = 0 # 점프 힘
-        self.dropping = False # 낙하 중인지 여부
+        self.jump_speed = (15) # 점프 속도
+        self._prev_jump_key = False # 이전 프레임 점프 키 상태
 
-        self.isExist = True # 오브젝트 존재 여부
-        
-    def move(self, move: pg.Vector2):
-        steps = [pg.Vector2(0, 0)]  # 시작 위치(0,0)를 steps 리스트에 추가
-        if move.x == 0: # x축 이동이 없을 때 (수직 이동)
-            if move.y > 0:
-                # y가 양수면 위쪽으로 한 칸씩 이동 경로 추가
-                for i in range(1, int(move.y) + 1):
-                    steps.append(pg.Vector2(0, int(i)))
-            elif move.y < 0:
-                # y가 음수면 아래쪽으로 한 칸씩 이동 경로 추가
-                for i in range(-1, int(move.y) - 1, -1):
-                    steps.append(pg.Vector2(0, int(i)))
-        elif move.x > 0: # x축 이동이 양수일 때 (오른쪽 대각선 또는 수평 이동)
-            for i in range(1, int(move.x) + 1):
-                steps.append(pg.Vector2(i, int(move.y * i) / move.x)) # y는 기울기 이용
-        else: # x축 이동이 음수일 때 (왼쪽 대각선 또는 수평 이동)
-            for i in range(-1, int(move.x) - 1, -1):
-                steps.append(pg.Vector2(i, int(move.y * i) / move.x)) #y는 기울기 이용
-                
-        # 충돌 체크
-        idx = len(steps) - 1
-        for i in range(len(steps)):
-            if self.isCollide(steps[i]):
-                idx = i - 1
-                break
+    def getGun(self, gunType: str): #image, size: int, bullet_speed: int
+        if self.type == 1:
+            self.gun_turn_angle = 2
+        elif self.type == 2:
+            self.gun_turn_angle = -2
 
-        # 이동
-        self.rect.x += steps[idx].x
-        self.rect.y += steps[idx].y
-        self.position = self.rect.topleft
+        if gunType == "pistol":
+            image = None
+            if (self.type == 1):
+                image = pg.image.load("./assets/right_gun.png").convert_alpha()
+                image = pg.transform.rotate(image, -90)
+            elif (self.type == 2):
+                image = pg.image.load("./assets/left_gun.png").convert_alpha()
+                image = pg.transform.rotate(image, 90)
+            self.gun = Pistol(image, pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2)) # 총 생성
 
-        return steps[idx] # 이동한 거리 반환
+    def setLocation(self, position: pg.Vector2): # 위치 설정
+        self.position = position
+        self.rect.topleft = (self.position.x, self.position.y)
 
+    def control(self): # 플레이어 조작
+        keys = pg.key.get_pressed() # 현재 키 상태 가져오기
+        move_dest = pg.Vector2(0, 0) # 이동할 거리 초기화
 
-    def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
-        pass
+        if keys[self.move_keys[0]]: # 왼쪽 방향키
+            move_dest.x = -self.speed
+        if keys[self.move_keys[1]]: # 오른쪽 방향키
+            move_dest.x = self.speed
+        if keys[self.move_keys[2]] and not self.dropping:
+            self.jump_power = self.jump_first_power
+            self.dropping = True  # 점프 시 낙하 중으로 설정
+
+        if keys[self.move_keys[3]]: # 공격
+            if self.gun and not self.didAttack:
+                self.gun.shoot(self)
+                self.gun_turn_angle *= -1
+                self.didAttack = True
+        else:
+            self.didAttack = False
+
+        return move_dest
     
-    def kill(self): # 오브젝트 제거
-        self.isExist = False
+    def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
+        # 충돌 여부를 확인하기 위해 임시로 rect를 복사
+        temp_rect = self.rect.copy()
+        temp_rect.x += int(move.x)
+        temp_rect.y += int(move.y)
 
-    def gravity(self): # 중력 적용
-        self.gravity_speed += self.gravity_acceleration # 중력 가속도 적용
-        if self.gravity_speed < 1: # 중력 속도가 1보다 작으면 중력 적용 안함 (떨어진 거리(move)가 (0, 0)이라서 땅에 닿았다고 판단되어 중력 속도가 초기화됨)
-            return
+        from map.init_setting import screen_width, screen_height, screen
+        from map.CreateMap import players, grounds, bullets
+        #if temp_rect.left < 0 or temp_rect.right > screen_width or temp_rect.top < 0 or temp_rect.bottom > screen_height: # 화면 밖으로 나가는지 확인
+        #    return True
+        old_rect = temp_rect.copy()
+        temp_rect.clamp_ip(screen.get_rect())
+
+        if temp_rect.topleft != old_rect.topleft:
+            return True
+
         
-        self.dropping = True # 낙하 중으로 설정
-        move = self.move(pg.Vector2(0, int(self.gravity_speed))) # 떨어진 거리
-        if move.y == 0: # 땅에 닿았을 때
-            # 중력 속도 초기화
-            self.gravity_speed = 0
-            self.dropping = False
+        for p in players: # 플레이어와 충돌 체크
+            if p != self and temp_rect.colliderect(p.rect):
+                return True
+        for g in grounds:
+            if temp_rect.colliderect(g.rect):
+                return True
+            
+        return False
 
+    def jump(self): # 점프 error : 더블점프 문제 고치기
+        if self.jump_power > 0:
+            self.jump_power -= 1
+            return pg.Vector2(0, -self.jump_speed)
+        return pg.Vector2(0, 0)
+    
+    def damage(self, damage: int): # 피해 받기
+        self.health -= damage
+        if self.health <= 0:
+            self.kill()  # 캐릭터 제거
+    
     def update(self):
         # 이동
+        move_dest = pg.Vector2(0, 0)
         self.gravity()
+        move_dest += self.control()  # 플레이어 조작
+        move_dest += self.jump()  # 점프 조작
+        move = self.move(move_dest)
+        
+        if move.y == 0:  # 천장에 닿았을 때
+            self.jump_power = 0
+
+        # 총 위치 업데이트
+        self.gun.setLocation(pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2))
+        self.gun.turn(self.gun_turn_angle)  # 총 회전
