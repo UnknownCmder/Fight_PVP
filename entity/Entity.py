@@ -13,8 +13,6 @@ class Entity(pg.sprite.Sprite):
         self.speed = 10 # 이동 속도
         self.gravity_speed = 0 # 중력 속도
         self.gravity_acceleration = (0.05) # 중력 가속도
-        self.jump_first_power = (7) # 점프 초기 힘
-        self.jump_power = 0 # 점프 힘
         self.dropping = False # 낙하 중인지 여부
 
         self.isExist = True # 오브젝트 존재 여부

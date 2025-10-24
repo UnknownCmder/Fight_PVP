@@ -11,12 +11,17 @@ class Character(Entity):
         self.gun = None
         self.didAttack = False  # 공격 여부
         self.gun_turn_angle = 0 # 총 회전 각도
+        self.jump_first_power = (20) # 점프 초기 힘
+        self.jump_power = 0 # 점프 힘
+        self.jump_speed = (15) # 점프 속도
+        self._prev_jump_key = False # 이전 프레임 점프 키 상태
 
     def getGun(self, image, size: int, bullet_speed: int):
         if self.type == 1:
             self.gun_turn_angle = 2
         elif self.type == 2:
             self.gun_turn_angle = -2
+
         self.gun = Gun(image, pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2), size, bullet_speed) # 총 생성
 
     def setLocation(self, position: pg.Vector2): # 위치 설정
@@ -31,9 +36,10 @@ class Character(Entity):
             move_dest.x = -self.speed
         if keys[self.move_keys[1]]: # 오른쪽 방향키
             move_dest.x = self.speed
-        if keys[self.move_keys[2]]: # 점프
-            if self.dropping is False:
-                self.jump_power = self.jump_first_power
+        if keys[self.move_keys[2]] and not self.dropping:
+            self.jump_power = self.jump_first_power
+            self.dropping = True  # 점프 시 낙하 중으로 설정
+
         if keys[self.move_keys[3]]: # 공격
             if self.gun and not self.didAttack:
                 self.gun.shoot(self)
@@ -41,7 +47,7 @@ class Character(Entity):
                 self.didAttack = True
         else:
             self.didAttack = False
-        
+
         return move_dest
     
     def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
@@ -70,10 +76,10 @@ class Character(Entity):
             
         return False
 
-    def jump(self): # 점프
+    def jump(self): # 점프 error : 더블점프 문제 고치기
         if self.jump_power > 0:
             self.jump_power -= 1
-            return pg.Vector2(0, -(self.jump_power + 1))
+            return pg.Vector2(0, -self.jump_speed)
         return pg.Vector2(0, 0)
     
     def damage(self, damage: int): # 피해 받기
