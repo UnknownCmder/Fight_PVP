@@ -1,5 +1,4 @@
 import pygame as pg
-from entity.Bullet import Bullet
 from abc import ABCMeta, abstractmethod
 
 class Gun(pg.sprite.Sprite, metaclass=ABCMeta):

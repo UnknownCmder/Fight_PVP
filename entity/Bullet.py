@@ -1,5 +1,5 @@
 import pygame as pg
-from entity import Entity
+from .Entity import Entity
 
 class Bullet(Entity):
     def __init__(self, image, position: pg.Vector2, size: int, vec: pg.Vector2, shooter, damage: int):

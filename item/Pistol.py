@@ -1,6 +1,6 @@
 import pygame as pg
-from entity.Bullet import Bullet
 from .Gun import Gun
+from entity.Bullet import Bullet
 
 class Pistol(Gun):
     def __init__(self, image, position: pg.Vector2):
