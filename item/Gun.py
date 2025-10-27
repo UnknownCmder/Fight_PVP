@@ -1,7 +1,7 @@
 import pygame as pg
-from entity.Bullet import Bullet
+from abc import ABCMeta, abstractmethod
 
-class Gun(pg.sprite.Sprite):
+class Gun(pg.sprite.Sprite, metaclass=ABCMeta):
     def __init__(self, image, position: pg.Vector2, size: int, bullet_speed: int):
         super().__init__()
         self.image = image # 이미지 설정
@@ -31,12 +31,9 @@ class Gun(pg.sprite.Sprite):
         self.position = position
         self.rect.center = position
 
+    @abstractmethod
     def shoot(self, shooter):
-        image = pg.image.load("./assets/bullet.png").convert_alpha()
-        image = pg.transform.rotate(image, -self.angle)
-        # 총알 생성
-        from map.CreateMap import bullets
-        bullets.add(Bullet(image, self.position, 20, pg.Vector2(0, self.bullet_speed).rotate(self.angle), shooter)) # 총알 생성
+        pass
 
 
     def update(self):
