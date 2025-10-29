@@ -4,6 +4,7 @@ import os
 import random
 from block import Ground
 import csv
+from item.Pistol import Pistol
 
 player1 = None
 player2 = None
@@ -78,13 +79,8 @@ def createMap():
                     grounds.add(ground)
 
         # 플레이어 총 생성
-        image = pg.image.load("./assets/right_gun.png").convert_alpha()
-        image = pg.transform.rotate(image, -90)
-        player1.getGun(image, 80, 20)  # 플레이어 총 생성 (임시 이미지 사용)
-        
-        image = pg.image.load("./assets/left_gun.png").convert_alpha()
-        image = pg.transform.rotate(image, 90)
-        player2.getGun(image, 80, 20)  # 플레이어 총 생성 (임시 이미지 사용)
+        player1.getGun("pistol")  # 플레이어 총 생성 (임시 이미지 사용)
+        player2.getGun("pistol")  # 플레이어 총 생성 (임시 이미지 사용)
         players.add(player1, player2)
 
         guns = pg.sprite.Group()  # 총 그룹 생성

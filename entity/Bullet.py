@@ -1,8 +1,8 @@
 import pygame as pg
-from entity import Entity
+from .Entity import Entity
 
 class Bullet(Entity):
-    def __init__(self, image, position: pg.Vector2, size: int, vec: pg.Vector2, shooter):
+    def __init__(self, image, position: pg.Vector2, size: int, vec: pg.Vector2, shooter, damage: int):
         super().__init__(image, position, size)
 
         self.rect = self.image.get_rect()  # 히트박스(직사각형)
@@ -10,6 +10,8 @@ class Bullet(Entity):
 
         self.inclination = vec # 기울기
         self.shooter = shooter
+
+        self.damage_amount = damage # 데미지 양
 
     def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
         # 충돌 여부를 확인하기 위해 임시로 rect를 복사
@@ -28,7 +30,7 @@ class Bullet(Entity):
                 continue
             #한 플레이어 여러번 맞기 방지 제작!!!
             if p.rect.colliderect(temp_rect):
-                p.damage(1)  # 플레이어에게 피해 주기
+                p.damage(self.damage_amount)  # 플레이어에게 피해 주기
                 self.kill()
                 return True
         
