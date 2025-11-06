@@ -14,8 +14,8 @@ class Shotgun(Gun):
         self.cur_attack_cooltime = self.init_attack_cooltime  # 쿨타임 초기화
 
         from map.CreateMap import bullets
-        for angle_offset in [-10, 0, 10]:  # 세 발의 총알을 약간씩 다른 각도로 발사
+        for angle_offset in [-10, 5, 0, 5, 10]:  # 다섯 발의 총알을 약간씩 다른 각도로 발사
             image = pg.image.load("./assets/bullet.png").convert_alpha()
             image = pg.transform.rotate(image, -(self.angle + angle_offset))
             # 총알 생성
-            bullets.add(Bullet(image, self.position, 20, pg.Vector2(0, self.bullet_speed).rotate(self.angle + angle_offset), shooter, 5)) # 총알 생성
+            bullets.add(Bullet(image, self.position, (20, 20), pg.Vector2(0, self.bullet_speed).rotate(self.angle + angle_offset), shooter, 5, -0.1)) # 총알 생성

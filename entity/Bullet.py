@@ -40,7 +40,7 @@ class Bullet(Entity):
                 self.kill()
                 return True
         for b in bullets:
-            if b != self and temp_rect.colliderect(b.rect):
+            if b != self and b.shooter != self.shooter and temp_rect.colliderect(b.rect):
                 self.kill()
                 b.kill()
                 return True
