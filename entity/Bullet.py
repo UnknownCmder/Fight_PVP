@@ -49,4 +49,5 @@ class Bullet(Entity):
         
     def update(self):
         self.move(self.inclination)  # 총알 이동
-        self.damage_amount += self.damage_increase  # 데미지 증가
+        if (self.damage_amount + self.damage_increase >= 0):
+            self.damage_amount += self.damage_increase  # 데미지 증가
