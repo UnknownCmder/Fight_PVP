@@ -104,8 +104,8 @@ class Character(Entity):
             return pg.Vector2(0, -self.jump_speed)
         return pg.Vector2(0, 0)
     
-    def damage(self, damage: int): # 피해 받기
-        self.health -= damage
+    def damage(self, damage): # 피해 받기
+        self.health -= int(damage)
         # 데미지 효과 시작
         self.damage_effect_time = self.DAMAGE_EFFECT_DURATION
         # 이미지를 빨간색으로 변경
