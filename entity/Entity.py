@@ -10,7 +10,7 @@ class Entity(pg.sprite.Sprite):
         self.rect = self.image.get_rect() # 히트박스(직사각형)
         self.rect.topleft = (self.position.x, self.position.y) # 직사각형 위치 설정
 
-        self.speed = 10 # 이동 속도
+        self.speed = 8 # 이동 속도
         self.gravity_speed = 0 # 중력 속도
         self.gravity_acceleration = (0.15) # 중력 가속도
         self.dropping = False # 낙하 중인지 여부
