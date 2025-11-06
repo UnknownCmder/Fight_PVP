@@ -4,7 +4,7 @@ from item.Pistol import Pistol
 from Tool import secondToTick
 
 class Character(Entity):
-    def __init__(self, type:int, image, position: pg.Vector2, size: int, move_keys: list):
+    def __init__(self, type:int, image, position: pg.Vector2, size: tuple, move_keys: list):
         super().__init__(image, position, size)
         self.type = type # 캐릭터 타입 (1: 플레이어1, 2: 플레이어2)
         self.move_keys = move_keys # [left, right, jump, shoot]
