@@ -58,11 +58,11 @@ def createMap():
                 if data[y][x] == 'P1':
                     image = pg.image.load("./assets/player1.png").convert_alpha()
                     
-                    player1 = Character(1, image, pg.Vector2(x*tile_size, y*tile_size), 50, [pg.K_a, pg.K_d, pg.K_w, pg.K_s, pg.K_q])
+                    player1 = Character(1, image, pg.Vector2(x*tile_size, y*tile_size), (50, 50), [pg.K_a, pg.K_d, pg.K_w, pg.K_s, pg.K_q])
                 elif data[y][x] == 'P2':
                     image = pg.image.load("./assets/player2.png").convert_alpha()
 
-                    player2 = Character(2, image, pg.Vector2(x*tile_size, y*tile_size), 50, [pg.K_j, pg.K_l, pg.K_i, pg.K_k, pg.K_o])
+                    player2 = Character(2, image, pg.Vector2(x*tile_size, y*tile_size), (50, 50), [pg.K_j, pg.K_l, pg.K_i, pg.K_k, pg.K_o])
                 elif data[y][x] == 'Gm':
                     # 임시로 바닥 이미지 생성 (추후에 삭제)
                     image = pg.image.load("./assets/mid_ground.png").convert_alpha()
