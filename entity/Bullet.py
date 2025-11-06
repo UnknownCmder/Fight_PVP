@@ -2,7 +2,7 @@ import pygame as pg
 from .Entity import Entity
 
 class Bullet(Entity):
-    def __init__(self, image, position: pg.Vector2, size: int, vec: pg.Vector2, shooter, damage: int):
+    def __init__(self, image, position: pg.Vector2, size: int, vec: pg.Vector2, shooter, damage: int, damage_increase: int = 0):
         super().__init__(image, position, size)
 
         self.rect = self.image.get_rect()  # 히트박스(직사각형)
@@ -12,6 +12,7 @@ class Bullet(Entity):
         self.shooter = shooter
 
         self.damage_amount = damage # 데미지 양
+        self.damage_increase = damage_increase # 데미지 증가량
 
     def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
         # 충돌 여부를 확인하기 위해 임시로 rect를 복사
@@ -48,3 +49,4 @@ class Bullet(Entity):
         
     def update(self):
         self.move(self.inclination)  # 총알 이동
+        self.damage_amount += self.damage_increase  # 데미지 증가
