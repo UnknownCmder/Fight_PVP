@@ -4,7 +4,7 @@ from item.Pistol import Pistol
 from Tool import secondToTick
 
 class Character(Entity):
-    def __init__(self, type:int, image, position: pg.Vector2, size: int, move_keys: list):
+    def __init__(self, type:int, image, position: pg.Vector2, size: tuple, move_keys: list):
         super().__init__(image, position, size)
         self.type = type # 캐릭터 타입 (1: 플레이어1, 2: 플레이어2)
         self.move_keys = move_keys # [left, right, jump, shoot]
@@ -104,8 +104,8 @@ class Character(Entity):
             return pg.Vector2(0, -self.jump_speed)
         return pg.Vector2(0, 0)
     
-    def damage(self, damage: int): # 피해 받기
-        self.health -= damage
+    def damage(self, damage): # 피해 받기
+        self.health -= int(damage)
         # 데미지 효과 시작
         self.damage_effect_time = self.DAMAGE_EFFECT_DURATION
         # 이미지를 빨간색으로 변경

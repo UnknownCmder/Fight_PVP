@@ -2,7 +2,7 @@ import pygame as pg
 from .Entity import Entity
 
 class Bullet(Entity):
-    def __init__(self, image, position: pg.Vector2, size: int, vec: pg.Vector2, shooter, damage: int, damage_increase: int = 0):
+    def __init__(self, image, position: pg.Vector2, size: tuple, vec: pg.Vector2, shooter, damage: int, damage_increase: int = 0):
         super().__init__(image, position, size)
 
         self.rect = self.image.get_rect()  # 히트박스(직사각형)
@@ -49,4 +49,5 @@ class Bullet(Entity):
         
     def update(self):
         self.move(self.inclination)  # 총알 이동
-        self.damage_amount += self.damage_increase  # 데미지 증가
+        if (self.damage_amount + self.damage_increase >= 0):
+            self.damage_amount += self.damage_increase  # 데미지 증가
