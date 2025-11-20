@@ -74,7 +74,8 @@ def select_feature():
 
     # 메뉴 항목
     skills = [
-        "mine"
+        "mine",
+        "heal"
     ]
 
     player1_gun = select_item("Player1 Gun", guns)
