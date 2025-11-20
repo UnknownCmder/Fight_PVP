@@ -69,7 +69,8 @@ def select_feature():
     # 메뉴 항목
     guns = [
         "pistol",
-        "shotgun"
+        "shotgun",
+        "sniper"
     ]
 
     # 메뉴 항목
