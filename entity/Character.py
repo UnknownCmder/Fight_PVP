@@ -49,6 +49,14 @@ class Character(Entity):
 
             from item.Shotgun import Shotgun
             self.gun = Shotgun(image, pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2)) # 총 생성
+        elif gunType == "sniper":
+            image = pg.image.load("./assets/sniper.png").convert_alpha()
+            image = pg.transform.rotate(image, -90)
+            if (self.type == 2):
+                image = pg.transform.flip(image, True, False)
+
+            from item.Sniper import Sniper
+            self.gun = Sniper(image, pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2)) # 총 생성
 
     def setLocation(self, position: pg.Vector2): # 위치 설정
         self.position = position
