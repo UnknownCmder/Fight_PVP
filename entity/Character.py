@@ -25,6 +25,9 @@ class Character(Entity):
         if skillType == "mine":
             from skill.MineSkill import MineSkill
             self.skill = MineSkill()
+        elif skillType == "heal":
+            from skill.Heal import Heal
+            self.skill = Heal()
 
     def getGun(self, gunType: str): #image, size: int, bullet_speed: int
         if self.type == 1:
@@ -131,6 +134,9 @@ class Character(Entity):
         
         if self.health <= 0:
             self.kill()  # 캐릭터 제거
+    
+    def heal(self, amount): # 회복
+        self.health = min(self.health + int(amount), 20)
     
     def update(self):
         # 이동

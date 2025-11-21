@@ -15,12 +15,14 @@ bullets = None
 mines = None
 WHITE = (255, 255, 255)  # 흰색 배경
 background_image = None
+particles = None
 
 def createMap():
     from Select_feature import player1_gun, player2_gun, player1_skill, player2_skill
     from .init_setting import tile_size, screen, screen_width, screen_height
     from Select_map import selected_map
-    global player1, player2, players, guns, grounds, bullets, WHITE, background_image, mines
+    global player1, player2, players, guns, grounds, bullets, WHITE, background_image, mines, particles
+
 
     screen.fill(WHITE) # 배경화면 그리기 (나중에는 이미지 삽입으로 변경)
 
@@ -92,5 +94,7 @@ def createMap():
         
         bullets = pg.sprite.Group()  # 총알 그룹 생성
         mines = pg.sprite.Group()  # 지뢰 그룹 생성
+
+        particles = []  # 효과 리스트 초기화
     else:
         print("폴더에 맵이 없습니다")
