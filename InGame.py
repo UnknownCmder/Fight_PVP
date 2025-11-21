@@ -45,8 +45,7 @@ def startGame():
         guns.draw(screen)  # 총 그리기
         bullets.draw(screen)  # 총알 그리기
         mines.draw(screen)  # 지뢰 그리기
-
-        for effect in particles[:]:  # 효과 업데이트 및 그리기
+        for effect in particles: # 파티클 그리기
             if not effect.update():
                 particles.remove(effect)
             else:

@@ -1,6 +1,5 @@
 from .Skill import Skill
 import pygame as pg
-import time
 from entity import Character
 from Tool import secondToTick
 from particle import HealParticle
@@ -17,9 +16,9 @@ class Heal(Skill):
             user.heal(self.heal_amount)
 
             offsets = [
-                (-15, -15),    # 왼쪽 위
-                (15, 15),      # 오른쪽 아래
-                (15, -15),     # 오른쪽 위
+                (user.size.x//2-15,user.size.y//2-15),    # 왼쪽 위
+                (user.size.x//2+15, user.size.y//2+15),      # 오른쪽 아래
+                (user.size.x//2+15,user.size.y//2-15),     # 오른쪽 위
             ]
 
             for ox, oy in offsets:

@@ -6,6 +6,7 @@ class Entity(pg.sprite.Sprite):
         self.image = image # 이미지 설정
         self.image = pg.transform.scale(self.image, (size[0], size[1])) # 이미지 크기 조정
         self.position = position # 위치 설정
+        self.size = pg.Vector2(size[0], size[1])
 
         self.rect = self.image.get_rect() # 히트박스(직사각형)
         self.rect.topleft = (self.position.x, self.position.y) # 직사각형 위치 설정
