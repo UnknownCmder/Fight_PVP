@@ -5,7 +5,7 @@ from Tool import secondToTick
 
 class Sniper(Gun):
     def __init__(self, image, position: pg.Vector2):
-        super().__init__(image, position, size=(90, 90), bullet_speed=60)
+        super().__init__(image, position, size=(100, 100), bullet_speed=60)
         self.init_attack_cooltime = secondToTick(1) #총 발사 쿨타임
 
     def shoot(self, shooter):

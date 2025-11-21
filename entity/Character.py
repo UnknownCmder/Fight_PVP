@@ -9,15 +9,23 @@ class Character(Entity):
         self.type = type # 캐릭터 타입 (1: 플레이어1, 2: 플레이어2)
         self.move_keys = move_keys # [left, right, jump, shoot]
         self.health = 20 # 체력
+
+        self.gunType = "" # 총 종류
         self.gun = None
-        self.didAttack = False  # 공격 여부
         self.gun_turn_angle = 0 # 총 회전 각도
+        self.pre_gunStopKey_pressed = False # 이전 프레임 총 회전 멈춤 상태
+        self.canTurnGun = True # 총 회전 가능 여부
+
+        self.didAttack = False  # 공격 여부
+
         self.jump_first_power = (20) # 점프 초기 힘
         self.jump_power = 0 # 점프 힘
         self.jump_speed = (15) # 점프 속도
-        self._prev_jump_key = False # 이전 프레임 점프 키 상태
+
         self.skill = None # 스킬
+
         self.original_image = self.image.copy()  # 원본 이미지 저장
+
         self.damage_effect_time = 0  # 데미지 효과 지속 시간
         self.DAMAGE_EFFECT_DURATION = secondToTick(0.5)  # 데미지 효과 지속 시간 (틱)
 
@@ -34,6 +42,8 @@ class Character(Entity):
             self.gun_turn_angle = 2
         elif self.type == 2:
             self.gun_turn_angle = -2
+
+        self.gunType = gunType
 
         if gunType == "pistol":
             image = None
@@ -88,6 +98,15 @@ class Character(Entity):
         if keys[self.move_keys[4]]: # 스킬 사용
             if self.skill:
                 self.skill.use(self)
+
+        if self.gunType == "sniper": # 스나이퍼 총일 때만 총 회전 멈추기 버튼 기능 활성화
+            if keys[self.move_keys[5]] and not self.pre_gunStopKey_pressed: # 총 도는 것 멈추기
+                if self.canTurnGun:
+                    self.canTurnGun = False
+                else:
+                    self.canTurnGun = True
+                
+            self.pre_gunStopKey_pressed = keys[self.move_keys[5]]
 
         return move_dest
     
@@ -158,6 +177,7 @@ class Character(Entity):
 
         # 총 위치 업데이트
         self.gun.setLocation(pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2))
-        self.gun.turn(self.gun_turn_angle)  # 총 회전
+        if ( self.canTurnGun ):
+            self.gun.turn(self.gun_turn_angle)  # 총 회전
         self.gun.update()  # 총 업데이트
         self.skill.update()  # 스킬 업데이트
