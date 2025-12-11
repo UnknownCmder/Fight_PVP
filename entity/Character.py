@@ -28,6 +28,10 @@ class Character(Entity):
         elif skillType == "heal":
             from skill.Heal import Heal
             self.skill = Heal()
+        elif skillType == "speedup":
+            from skill.SpeedUp_Skill import SpeedUp_Skill
+            self.skill = SpeedUp_Skill()
+
 
     def getGun(self, gunType: str): #image, size: int, bullet_speed: int
         if self.type == 1:
@@ -137,6 +141,9 @@ class Character(Entity):
     
     def heal(self, amount): # 회복
         self.health = min(self.health + int(amount), 20)
+
+    def setSpeed(self, speed):
+        self.speed = speed
     
     def update(self):
         # 이동
