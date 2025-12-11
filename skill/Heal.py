@@ -6,8 +6,8 @@ from particle import HealParticle
 
 class Heal(Skill):
     def __init__(self):
-        self.heal_amount = 10
-        self.init_cooltime = secondToTick(10)
+        self.heal_amount = 8
+        self.init_cooltime = secondToTick(12)
         self.cooltime = 0
 
     def use(self, user):

@@ -17,11 +17,15 @@ WHITE = (255, 255, 255)  # 흰색 배경
 background_image = None
 particles = None
 
+player1_control_keys = [pg.K_a, pg.K_d, pg.K_w, pg.K_s, pg.K_q, pg.K_LSHIFT]
+player2_control_keys = [pg.K_l, pg.K_QUOTE, pg.K_p, pg.K_SEMICOLON, pg.K_LEFTBRACKET, pg.K_RSHIFT]
+
+
 def createMap():
     from Select_feature import player1_gun, player2_gun, player1_skill, player2_skill
     from .init_setting import tile_size, screen, screen_width, screen_height
     from Select_map import selected_map
-    global player1, player2, players, guns, grounds, bullets, WHITE, background_image, mines, particles
+    global player1, player2, players, guns, grounds, bullets, WHITE, background_image, mines, particles, player1_control_keys, player2_control_keys
 
 
     screen.fill(WHITE) # 배경화면 그리기 (나중에는 이미지 삽입으로 변경)
@@ -60,11 +64,11 @@ def createMap():
                 if data[y][x] == 'P1':
                     image = pg.image.load("./assets/player1.png").convert_alpha()
                     
-                    player1 = Character(1, image, pg.Vector2(x*tile_size, y*tile_size), (50, 50), [pg.K_a, pg.K_d, pg.K_w, pg.K_s, pg.K_q, pg.K_LSHIFT])
+                    player1 = Character(1, image, pg.Vector2(x*tile_size, y*tile_size), (50, 50), player1_control_keys)
                 elif data[y][x] == 'P2':
                     image = pg.image.load("./assets/player2.png").convert_alpha()
 
-                    player2 = Character(2, image, pg.Vector2(x*tile_size, y*tile_size), (50, 50), [pg.K_l, pg.K_QUOTE, pg.K_p, pg.K_SEMICOLON, pg.K_LEFTBRACKET, pg.K_RSHIFT])
+                    player2 = Character(2, image, pg.Vector2(x*tile_size, y*tile_size), (50, 50), player2_control_keys)
                 elif data[y][x] == 'Gm':
                     # 임시로 바닥 이미지 생성 (추후에 삭제)
                     image = pg.image.load("./assets/mid_ground.png").convert_alpha()

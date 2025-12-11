@@ -8,8 +8,9 @@ player2_gun = None
 player1_skill = None
 player2_skill = None
 
-def select_item(title, menu):
+def select_item(title, menu, selected_player):
     from map.init_setting import screen, screen_height, screen_width
+    from map.CreateMap import player1_control_keys, player2_control_keys
     # 색상
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
@@ -28,32 +29,34 @@ def select_item(title, menu):
         #제목 표시
         draw_text_with_outline(title, font_current, RED, WHITE, (screen_width // 2, screen_height // 4), screen, 2)
         
-        # 표시할 맵 이름
+        # 표시할 메뉴 이름
         prev_menu = menu[current_index - 1] if current_index > 0 else ""
         next_manu = menu[current_index + 1] if current_index < len(menu) - 1 else ""
         current_manu = menu[current_index]
 
-        # 이전 맵
+        # 이전 메뉴
         if prev_menu:
             draw_text_with_outline(prev_menu, font_other, BLACK, WHITE, (screen_width // 2, screen_height // 2 - 40), screen, 2)
         
-        # 현재 맵
+        # 현재 메뉴
         draw_text_with_outline(current_manu, font_current, RED, WHITE, (screen_width // 2, screen_height // 2), screen, 2)
         
-        # 다음 맵
+        # 다음 메뉴
         if next_manu:
             draw_text_with_outline(next_manu, font_other, BLACK, WHITE, (screen_width // 2, screen_height // 2 + 40), screen, 2)
 
+        up_key = [player1_control_keys[2], player2_control_keys[2]]
+        down_key = [player1_control_keys[3], player2_control_keys[3]]
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
                 pg.quit()
                 sys.exit()
             elif event.type == pg.KEYDOWN:
-                if event.key in [pg.K_w, pg.K_UP]:
+                if event.key == up_key[selected_player - 1]:
                     if current_index > 0:
                         current_index -= 1
-                elif event.key in [pg.K_s, pg.K_DOWN]:
+                elif event.key == down_key[selected_player - 1]:
                     if current_index < len(menu) - 1:
                         current_index += 1
                 elif event.key in [pg.K_SPACE, pg.K_RETURN]:
@@ -79,7 +82,7 @@ def select_feature():
         "heal"
     ]
 
-    player1_gun = select_item("Player1 Gun", guns)
-    player1_skill = select_item("Player1 Skill", skills)
-    player2_gun = select_item("Player2 Gun", guns)
-    player2_skill = select_item("Player2 Skill", skills)
+    player1_gun = select_item("Player1 Gun", guns,1 )
+    player1_skill = select_item("Player1 Skill", skills,1 )
+    player2_gun = select_item("Player2 Gun", guns, 2)
+    player2_skill = select_item("Player2 Skill", skills, 2)

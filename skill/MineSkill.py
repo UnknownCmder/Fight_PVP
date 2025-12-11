@@ -7,7 +7,7 @@ from Tool import secondToTick
 class MineSkill(Skill):
     def __init__(self):
         super().__init__()
-        self.init_cooltime = secondToTick(3)
+        self.init_cooltime = secondToTick(5)
         self.cooltime = 0
 
     def use(self, user: Character):

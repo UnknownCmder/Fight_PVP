@@ -1,6 +1,7 @@
 import pygame as pg
 from .Entity import Entity
 from .Character import Character
+from Tool import secondToTick
 
 class Mine_entity(Entity):
     def __init__(self, position: pg.Vector2, size: tuple, user: Character):
@@ -8,6 +9,8 @@ class Mine_entity(Entity):
         super().__init__(image, position, size)
         self.damage = 10  # 지뢰의 데미지 설정
         self.user = user  # 지뢰를 설치한 플레이어
+
+        self.duration_time = secondToTick(20)  # 지뢰 지속 시간 (초 단위)
             
     def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
         # 충돌 여부를 확인하기 위해 임시로 rect를 복사
@@ -36,3 +39,10 @@ class Mine_entity(Entity):
                 return True
             
         return False
+    
+    def update(self):
+        if self.duration_time <= 0:
+            self.kill()
+            return
+        self.duration_time -= 1
+        self.gravity() # 중력 적용

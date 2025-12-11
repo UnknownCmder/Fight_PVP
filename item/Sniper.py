@@ -9,6 +9,10 @@ class Sniper(Gun):
         self.init_attack_cooltime = secondToTick(1) #총 발사 쿨타임
 
     def shoot(self, shooter):
+        if self.cur_attack_cooltime > 0:
+            return  # 아직 쿨타임이 남아있으면 발사하지 않음
+        self.cur_attack_cooltime = self.init_attack_cooltime  # 쿨타임 초기화
+
         image = pg.image.load("./assets/bullet.png").convert_alpha()
         image = pg.transform.rotate(image, -self.angle)
 

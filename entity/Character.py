@@ -8,7 +8,8 @@ class Character(Entity):
         super().__init__(image, position, size)
         self.type = type # 캐릭터 타입 (1: 플레이어1, 2: 플레이어2)
         self.move_keys = move_keys # [left, right, jump, shoot]
-        self.health = 20 # 체력
+        self.maximum_health = 50 # 최대 체력
+        self.health = self.maximum_health # 체력
 
         self.gunType = "" # 총 종류
         self.gun = None
@@ -155,7 +156,7 @@ class Character(Entity):
             self.kill()  # 캐릭터 제거
     
     def heal(self, amount): # 회복
-        self.health = min(self.health + int(amount), 20)
+        self.health = min(self.health + int(amount), self.maximum_health)
     
     def update(self):
         # 이동
