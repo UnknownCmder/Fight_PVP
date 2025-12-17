@@ -29,6 +29,7 @@ class Character(Entity):
 
         self.damage_effect_time = 0  # 데미지 효과 지속 시간
         self.DAMAGE_EFFECT_DURATION = secondToTick(0.5)  # 데미지 효과 지속 시간 (틱)
+        self.sniper_fix_sound = pg.mixer.Sound("./assets/sounds/sniper_fix.wav")  # 스나이퍼 조준 소리 로드
 
     def getSkill(self, skillType: str):
         if skillType == "mine":
@@ -37,6 +38,9 @@ class Character(Entity):
         elif skillType == "heal":
             from skill.Heal import Heal
             self.skill = Heal()
+        elif skillType == "speedup":
+            from skill.SpeedUp_Skill import SpeedUp_Skill
+            self.skill = SpeedUp_Skill()
 
     def getGun(self, gunType: str): #image, size: int, bullet_speed: int
         if self.type == 1:
@@ -103,6 +107,7 @@ class Character(Entity):
         if self.gunType == "sniper": # 스나이퍼 총일 때만 총 회전 멈추기 버튼 기능 활성화
             if keys[self.move_keys[5]] and not self.pre_gunStopKey_pressed: # 총 도는 것 멈추기
                 if self.canTurnGun:
+                    self.sniper_fix_sound.play()  # 스나이퍼 조준 소리 재생
                     self.canTurnGun = False
                 else:
                     self.canTurnGun = True
@@ -157,6 +162,9 @@ class Character(Entity):
     
     def heal(self, amount): # 회복
         self.health = min(self.health + int(amount), self.maximum_health)
+
+    def setSpeed(self, speed):
+        self.speed = speed
     
     def update(self):
         # 이동

@@ -10,10 +10,13 @@ class MineSkill(Skill):
         self.init_cooltime = secondToTick(5)
         self.cooltime = 0
 
+        self.plant_sound = pg.mixer.Sound("./assets/sounds/plant_mine.wav")  # 지뢰 설치 소리 로드
+
     def use(self, user: Character):
         if self.cooltime > 0:
             return  # 쿨타임이 남아있으면 스킬 사용 불가
         self.cooltime = self.init_cooltime  # 쿨타임 초기화
 
+        self.plant_sound.play()  # 지뢰 설치 소리 재생
         from map.CreateMap import mines
         mines.add(Mine_entity(pg.Vector2(user.position.x, user.position.y-30), size=(60, 30), user=user))  # 지뢰 생성 및 추가

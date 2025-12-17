@@ -21,6 +21,7 @@ def select_item(title, menu, selected_player):
     font_other = pg.font.SysFont(None, 35)     # 이전/다음 선택지
 
     current_index = 0
+    button_sound = pg.mixer.Sound("./assets/sounds/button_click.wav")  # 버튼 클릭 소리 로드
     running = True
     while running:
         background_image = pg.image.load("./assets/setting_background.png").convert()
@@ -60,6 +61,7 @@ def select_item(title, menu, selected_player):
                     if current_index < len(menu) - 1:
                         current_index += 1
                 elif event.key in [pg.K_SPACE, pg.K_RETURN]:
+                    button_sound.play()  # 버튼 클릭 소리 재생
                     running = False
 
         pg.display.flip()

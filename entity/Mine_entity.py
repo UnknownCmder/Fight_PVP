@@ -11,6 +11,8 @@ class Mine_entity(Entity):
         self.user = user  # 지뢰를 설치한 플레이어
 
         self.duration_time = secondToTick(20)  # 지뢰 지속 시간 (초 단위)
+
+        self.explosion_sound = pg.mixer.Sound("./assets/sounds/mine_explosion.wav")  # 지뢰 폭발 소리 로드
             
     def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
         # 충돌 여부를 확인하기 위해 임시로 rect를 복사
@@ -31,7 +33,13 @@ class Mine_entity(Entity):
         
         for p in players: # 플레이어와 충돌 체크
             if p != self.user and temp_rect.colliderect(p.rect):
+                self.explosion_sound.play()  # 폭발 소리 재생
                 p.damage(self.damage)  # 플레이어에게 피해 주기
+                
+                from particle import ExplosionParticle
+                particle = ExplosionParticle(self.position.x + self.size.x//2, self.position.y + self.size.y//2, max_radius=70, grow_speed=5)
+                from map.CreateMap import particles
+                particles.append(particle)
                 self.kill()  # 지뢰 제거
                 return True
         for g in grounds:

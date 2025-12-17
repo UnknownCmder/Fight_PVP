@@ -9,9 +9,11 @@ class Heal(Skill):
         self.heal_amount = 8
         self.init_cooltime = secondToTick(12)
         self.cooltime = 0
+        self.use_sound = pg.mixer.Sound("./assets/sounds/heal.wav")  # 회복 스킬 소리 로드
 
     def use(self, user):
         if self.cooltime == 0:
+            self.use_sound.play()  # 회복 스킬 소리 재생
             # 체력 회복
             user.heal(self.heal_amount)
 
