@@ -30,6 +30,7 @@ class Character(Entity):
         self.damage_effect_time = 0  # 데미지 효과 지속 시간
         self.DAMAGE_EFFECT_DURATION = secondToTick(0.5)  # 데미지 효과 지속 시간 (틱)
         self.sniper_fix_sound = pg.mixer.Sound("./assets/sounds/sniper_fix.wav")  # 스나이퍼 조준 소리 로드
+        self.damage_sound = pg.mixer.Sound("./assets/sounds/damage.wav")  # 데미지 소리 로드
 
     def getSkill(self, skillType: str):
         if skillType == "mine":
@@ -149,6 +150,7 @@ class Character(Entity):
         return pg.Vector2(0, 0)
     
     def damage(self, damage): # 피해 받기
+        self.damage_sound.play()  # 데미지 소리 재생
         self.health -= int(damage)
         # 데미지 효과 시작
         self.damage_effect_time = self.DAMAGE_EFFECT_DURATION

@@ -9,14 +9,14 @@ class SpeedUp_Skill(Skill):
     def __init__(self):
         super().__init__()
         # 쿨타임
-        self.init_cooltime = secondToTick(7)
+        self.init_cooltime = secondToTick(20)
         self.cooltime = 0
 
         self.user = None
 
-        # 스킬 발동동
+        # 스킬 발동
         self.speed_increase_amount = 10        
-        self.init_duration_time = secondToTick(7)           
+        self.init_duration_time = secondToTick(5)           
         self.duration_time = 0
 
         self.user_original_speed = 0

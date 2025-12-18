@@ -5,7 +5,7 @@ from Tool import secondToTick
 
 class Shotgun(Gun):
     def __init__(self, image, position: pg.Vector2):
-        super().__init__(image, position, size=(100, 100), bullet_speed=15)
+        super().__init__(image, position, size=(100, 100), bullet_speed=20)
         self.init_attack_cooltime = secondToTick(1.5) # 샷건의 공격 속도 설정 (발사 간격)
         self.shot_sound = pg.mixer.Sound("./assets/sounds/shotgun_shot.wav")  # 샷건 발사 소리 로드
 
