@@ -1,0 +1,56 @@
+import pygame as pg
+from .Entity import Entity
+from .Character import Character
+from Tool import secondToTick
+
+class Mine_entity(Entity):
+    def __init__(self, position: pg.Vector2, size: tuple, user: Character):
+        image = pg.image.load("./assets/mine.png").convert_alpha() # 지뢰 이미지 로드
+        super().__init__(image, position, size)
+        self.damage = 10  # 지뢰의 데미지 설정
+        self.user = user  # 지뢰를 설치한 플레이어
+
+        self.duration_time = secondToTick(20)  # 지뢰 지속 시간 (초 단위)
+
+        self.explosion_sound = pg.mixer.Sound("./assets/sounds/mine_explosion.wav")  # 지뢰 폭발 소리 로드
+            
+    def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
+        # 충돌 여부를 확인하기 위해 임시로 rect를 복사
+        temp_rect = self.rect.copy()
+        temp_rect.x += int(move.x)
+        temp_rect.y += int(move.y)
+
+        from map.init_setting import screen_width, screen_height, screen
+        from map.CreateMap import players, grounds, bullets
+        #if temp_rect.left < 0 or temp_rect.right > screen_width or temp_rect.top < 0 or temp_rect.bottom > screen_height: # 화면 밖으로 나가는지 확인
+        #    return True
+        old_rect = temp_rect.copy()
+        temp_rect.clamp_ip(screen.get_rect())
+
+        if temp_rect.topleft != old_rect.topleft:
+            return True
+
+        
+        for p in players: # 플레이어와 충돌 체크
+            if p != self.user and temp_rect.colliderect(p.rect):
+                self.explosion_sound.play()  # 폭발 소리 재생
+                p.damage(self.damage)  # 플레이어에게 피해 주기
+                
+                from particle import ExplosionParticle
+                particle = ExplosionParticle(self.position.x + self.size.x//2, self.position.y + self.size.y//2, max_radius=70, grow_speed=5)
+                from map.CreateMap import particles
+                particles.append(particle)
+                self.kill()  # 지뢰 제거
+                return True
+        for g in grounds:
+            if temp_rect.colliderect(g.rect):
+                return True
+            
+        return False
+    
+    def update(self):
+        if self.duration_time <= 0:
+            self.kill()
+            return
+        self.duration_time -= 1
+        self.gravity() # 중력 적용
