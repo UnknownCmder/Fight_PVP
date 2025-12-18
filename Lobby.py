@@ -27,6 +27,7 @@ def start_lobby():
 
     selected_index = 0  # 현재 선택된 메뉴
 
+    button_sound = pg.mixer.Sound("./assets/sounds/button_click.wav")  # 버튼 클릭 소리 로드
     # 메인 루프 
     running = True
     while running:
@@ -72,6 +73,7 @@ def start_lobby():
                 elif event.key == pg.K_UP or event.key == pg.K_w:
                     selected_index = (selected_index - 1) % len(menu_items)
                 elif event.key == pg.K_SPACE:
+                    button_sound.play()  # 버튼 클릭 소리 재생
                     if menu_items[selected_index]["text"] == "play":
                         play()
                     elif menu_items[selected_index]["text"] == "setting":
@@ -81,6 +83,7 @@ def start_lobby():
                         running = False
                     #print(menu_items[selected_index]["text"])
             elif event.type == pg.MOUSEBUTTONDOWN:
+                button_sound.play()  # 버튼 클릭 소리 재생
                 mouse_pos = event.pos
                 for item in menu_items:
                     if item["rect"] and item["rect"].collidepoint(mouse_pos):
@@ -96,14 +99,15 @@ def start_lobby():
     sys.exit()
 
 def play():
+    button_sound = pg.mixer.Sound("./assets/sounds/button_click.wav")  # 버튼 클릭 소리 로드
     game_running = True
     while game_running:
         result = startGame()  # 게임 시작
         if result == "lobby":
-            print("로비로 돌아가기")
+            button_sound.play()  # 버튼 클릭 소리 재생
             game_running = False  # 종료
         elif result == "replay":
-            print("게임 다시 시작")
+            button_sound.play()  # 버튼 클릭 소리 재생
             continue  # 게임 다시 시작
         else:
             game_running = False  # 종료

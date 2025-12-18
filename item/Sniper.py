@@ -5,10 +5,18 @@ from Tool import secondToTick
 
 class Sniper(Gun):
     def __init__(self, image, position: pg.Vector2):
-        super().__init__(image, position, size=(90, 90), bullet_speed=60)
+        super().__init__(image, position, size=(100, 100), bullet_speed=60)
         self.init_attack_cooltime = secondToTick(1) #총 발사 쿨타임
+        self.shoot_sound = pg.mixer.Sound("./assets/sounds/sniper_shot.wav")  # 스나이퍼 총 소리 로드
 
     def shoot(self, shooter):
+        if self.cur_attack_cooltime > 0:
+            return  # 아직 쿨타임이 남아있으면 발사하지 않음
+        self.cur_attack_cooltime = self.init_attack_cooltime  # 쿨타임 초기화
+
+
+        self.shoot_sound.play() # 총 소리 재생
+
         image = pg.image.load("./assets/bullet.png").convert_alpha()
         image = pg.transform.rotate(image, -self.angle)
 
