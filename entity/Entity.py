@@ -43,6 +43,11 @@ class Entity(pg.sprite.Sprite):
                 idx = i - 1
                 break
 
+        if (idx < 0): #시작 지점에서 이미 충돌 상태인 경우 -> 이전 위치로 이동
+            self.rect.topleft = (int(self.pre_pos.x), int(self.pre_pos.y))
+            self.position = self.pre_pos
+            return pg.Vector2(0, 0)
+
         # 이동
         self.rect.x += steps[idx].x
         self.rect.y += steps[idx].y
