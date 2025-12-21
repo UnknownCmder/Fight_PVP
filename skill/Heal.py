@@ -6,12 +6,14 @@ from particle import HealParticle
 
 class Heal(Skill):
     def __init__(self):
-        self.heal_amount = 10
-        self.init_cooltime = secondToTick(10)
+        self.heal_amount = 7 # 회복량
+        self.init_cooltime = secondToTick(20)
         self.cooltime = 0
+        self.use_sound = pg.mixer.Sound("./assets/sounds/heal.wav")  # 회복 스킬 소리 로드
 
     def use(self, user):
         if self.cooltime == 0:
+            self.use_sound.play()  # 회복 스킬 소리 재생
             # 체력 회복
             user.heal(self.heal_amount)
 

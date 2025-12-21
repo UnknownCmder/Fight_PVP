@@ -8,18 +8,29 @@ class Character(Entity):
         super().__init__(image, position, size)
         self.type = type # 캐릭터 타입 (1: 플레이어1, 2: 플레이어2)
         self.move_keys = move_keys # [left, right, jump, shoot]
-        self.health = 20 # 체력
+        self.maximum_health = 50 # 최대 체력
+        self.health = self.maximum_health # 체력
+
+        self.gunType = "" # 총 종류
         self.gun = None
-        self.didAttack = False  # 공격 여부
         self.gun_turn_angle = 0 # 총 회전 각도
+        self.pre_gunStopKey_pressed = False # 이전 프레임 총 회전 멈춤 상태
+        self.canTurnGun = True # 총 회전 가능 여부
+
+        self.didAttack = False  # 공격 여부
+
         self.jump_first_power = (20) # 점프 초기 힘
         self.jump_power = 0 # 점프 힘
         self.jump_speed = (15) # 점프 속도
-        self._prev_jump_key = False # 이전 프레임 점프 키 상태
+
         self.skill = None # 스킬
+
         self.original_image = self.image.copy()  # 원본 이미지 저장
+
         self.damage_effect_time = 0  # 데미지 효과 지속 시간
         self.DAMAGE_EFFECT_DURATION = secondToTick(0.5)  # 데미지 효과 지속 시간 (틱)
+        self.sniper_fix_sound = pg.mixer.Sound("./assets/sounds/sniper_fix.wav")  # 스나이퍼 조준 소리 로드
+        self.damage_sound = pg.mixer.Sound("./assets/sounds/damage.wav")  # 데미지 소리 로드
 
     def getSkill(self, skillType: str):
         if skillType == "mine":
@@ -28,12 +39,17 @@ class Character(Entity):
         elif skillType == "heal":
             from skill.Heal import Heal
             self.skill = Heal()
+        elif skillType == "speedup":
+            from skill.SpeedUp_Skill import SpeedUp_Skill
+            self.skill = SpeedUp_Skill()
 
     def getGun(self, gunType: str): #image, size: int, bullet_speed: int
         if self.type == 1:
             self.gun_turn_angle = 2
         elif self.type == 2:
             self.gun_turn_angle = -2
+
+        self.gunType = gunType
 
         if gunType == "pistol":
             image = None
@@ -89,6 +105,16 @@ class Character(Entity):
             if self.skill:
                 self.skill.use(self)
 
+        if self.gunType == "sniper": # 스나이퍼 총일 때만 총 회전 멈추기 버튼 기능 활성화
+            if keys[self.move_keys[5]] and not self.pre_gunStopKey_pressed: # 총 도는 것 멈추기
+                if self.canTurnGun:
+                    self.sniper_fix_sound.play()  # 스나이퍼 조준 소리 재생
+                    self.canTurnGun = False
+                else:
+                    self.canTurnGun = True
+                
+            self.pre_gunStopKey_pressed = keys[self.move_keys[5]]
+
         return move_dest
     
     def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
@@ -124,6 +150,7 @@ class Character(Entity):
         return pg.Vector2(0, 0)
     
     def damage(self, damage): # 피해 받기
+        self.damage_sound.play()  # 데미지 소리 재생
         self.health -= int(damage)
         # 데미지 효과 시작
         self.damage_effect_time = self.DAMAGE_EFFECT_DURATION
@@ -136,7 +163,10 @@ class Character(Entity):
             self.kill()  # 캐릭터 제거
     
     def heal(self, amount): # 회복
-        self.health = min(self.health + int(amount), 20)
+        self.health = min(self.health + int(amount), self.maximum_health)
+
+    def setSpeed(self, speed):
+        self.speed = speed
     
     def update(self):
         # 이동
@@ -158,6 +188,7 @@ class Character(Entity):
 
         # 총 위치 업데이트
         self.gun.setLocation(pg.Vector2((self.rect.left + self.rect.right) / 2, (self.rect.top + self.rect.bottom) / 2))
-        self.gun.turn(self.gun_turn_angle)  # 총 회전
+        if ( self.canTurnGun ):
+            self.gun.turn(self.gun_turn_angle)  # 총 회전
         self.gun.update()  # 총 업데이트
         self.skill.update()  # 스킬 업데이트

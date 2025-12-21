@@ -25,6 +25,7 @@ def select_map():
     file_list.insert(0, "Random")  # 랜덤 맨 위 추가
 
     current_index = 0
+    button_sound = pg.mixer.Sound("./assets/sounds/button_click.wav")  # 버튼 클릭 소리 로드
     running = True
     while running:
         background_image = pg.image.load("./assets/setting_background.png").convert()
@@ -59,6 +60,7 @@ def select_map():
                     if current_index < len(file_list) - 1:
                         current_index += 1
                 elif event.key in [pg.K_SPACE, pg.K_RETURN]:
+                    button_sound.play()  # 버튼 클릭 소리 재생
                     if current_map == file_list[0]:
                         selected_map = "RANDOM"
                     else:
