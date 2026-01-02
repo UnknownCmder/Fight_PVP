@@ -6,6 +6,7 @@ class Entity(pg.sprite.Sprite):
         self.image = image # 이미지 설정
         self.image = pg.transform.scale(self.image, (size[0], size[1])) # 이미지 크기 조정
         self.position = position # 위치 설정
+        self.pre_pos = position.copy() # 이전 위치 저장
         self.size = pg.Vector2(size[0], size[1])
 
         self.rect = self.image.get_rect() # 히트박스(직사각형)
@@ -19,41 +20,44 @@ class Entity(pg.sprite.Sprite):
         self.isExist = True # 오브젝트 존재 여부
         
     def move(self, move: pg.Vector2):
-        steps = [pg.Vector2(0, 0)]  # 시작 위치(0,0)를 steps 리스트에 추가
+        #x축 1칸 당 y축 이동 거리 계산
+        vec = pg.Vector2(0, 0)
         if move.x == 0: # x축 이동이 없을 때 (수직 이동)
             if move.y > 0:
                 # y가 양수면 위쪽으로 한 칸씩 이동 경로 추가
-                for i in range(1, int(move.y) + 1):
-                    steps.append(pg.Vector2(0, int(i)))
+                vec = pg.Vector2(0, 1)
             elif move.y < 0:
                 # y가 음수면 아래쪽으로 한 칸씩 이동 경로 추가
-                for i in range(-1, int(move.y) - 1, -1):
-                    steps.append(pg.Vector2(0, int(i)))
+                vec = pg.Vector2(0, -1)
         elif move.x > 0: # x축 이동이 양수일 때 (오른쪽 대각선 또는 수평 이동)
-            for i in range(1, int(move.x) + 1):
-                steps.append(pg.Vector2(i, int(move.y * i) / move.x)) # y는 기울기 이용
+            vec = pg.Vector2(1, int(move.y) / move.x) # y는 기울기 이용
         else: # x축 이동이 음수일 때 (왼쪽 대각선 또는 수평 이동)
-            for i in range(-1, int(move.x) - 1, -1):
-                steps.append(pg.Vector2(i, int(move.y * i) / move.x)) #y는 기울기 이용
-                
-        # 충돌 체크
-        idx = len(steps) - 1
-        for i in range(len(steps)):
-            if self.isCollide(steps[i]):
-                idx = i - 1
-                break
-
-        if (idx < 0): #시작 지점에서 이미 충돌 상태인 경우 -> 이전 위치로 이동
+            vec = pg.Vector2(-1, int(move.y) / abs(move.x)) #y는 기울기 이용
+        
+        
+        vector = pg.Vector2(0, 0)
+        if self.isCollide(vector): #시작 지점에서 이미 충돌 상태인 경우 -> 이전 위치로 이동 (이 코드 없으면 캐릭터가 낌)
             self.rect.topleft = (int(self.pre_pos.x), int(self.pre_pos.y))
             self.position = self.pre_pos
-            return pg.Vector2(0, 0)
+            return vector
+        
+        if vec.x == 0: # 수직 이동
+            for i in range(abs(int(move.y)) + 1):
+                if self.isCollide(i * vec):
+                    break
+                vector = i * vec
+        else: # 수평 또는 대각선 이동
+            for i in range(abs(int(move.x))):
+                if self.isCollide(i * vec):
+                    break
+                vector = i * vec
 
-        # 이동
-        self.rect.x += steps[idx].x
-        self.rect.y += steps[idx].y
+            
+        self.rect.x += vector.x
+        self.rect.y += vector.y
+        self.pre_pos = self.position.copy()
         self.position = pg.Vector2(self.rect.topleft[0], self.rect.topleft[1])
-
-        return steps[idx] # 이동한 거리 반환
+        return vector
 
 
     def isCollide(self, move: pg.Vector2): # 충돌 여부 확인
